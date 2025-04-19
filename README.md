@@ -1,76 +1,50 @@
-Blockchain Supply Chain Tracking System
-A decentralized application (DApp) demonstrating how blockchain technology can enhance transparency and traceability in supply chain operations.
-Overview
-This project implements a blockchain-based supply chain tracking system that allows different participants (manufacturer, distributor, retailer, and inspector) to create, transfer, and track products throughout the supply chain. The system provides an immutable record of each product's journey, enhancing transparency and trust among all stakeholders.
-Features
+# Blockchain Supply Chain Tracking System 🛠️
 
-Product creation by authorized manufacturers
-Ownership transfer between supply chain participants
-Real-time tracking of product location and status
-Complete audit trail of product history
-Role-based interactions (manufacturer, distributor, retailer, inspector)
-MetaMask integration for participant authentication
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Solidity](https://img.shields.io/badge/Solidity-%5E0.8.0-363636.svg)](https://soliditylang.org/)
 
-Technology Stack
+A decentralized application (DApp) demonstrating how blockchain technology enhances transparency and traceability in supply chain operations.
 
-Smart Contract: Solidity
-Local Blockchain: Hardhat
-Frontend: HTML, CSS, JavaScript
-Web3 Integration: Ethers.js
-Wallet: MetaMask
+## 📑 Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Technology Stack](#technology-stack)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Demo Workflow](#demo-workflow)
+- [Academic Context](#academic-context)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
 
-Getting Started
-Prerequisites
+## 🌟 Overview
+This project implements a blockchain-based supply chain tracking system. It enables participants (manufacturers, distributors, retailers, and inspectors) to create, transfer, and track products across the supply chain. The system ensures an immutable record of each product's journey, fostering transparency and trust among stakeholders.
 
-Node.js and npm
-MetaMask browser extension
+## 🚀 Features
+- 🏭 **Product Creation**: Authorized manufacturers can create products.
+- 🔄 **Ownership Transfer**: Seamless transfer between supply chain participants.
+- 📍 **Real-Time Tracking**: Monitor product location and status.
+- 📜 **Audit Trail**: Access a complete history of product movements.
+- 👤 **Role-Based Interactions**: Supports manufacturer, distributor, retailer, and inspector roles.
+- 🔐 **MetaMask Integration**: Secure participant authentication.
 
-Installation
+## 🛠️ Technology Stack
+| Component           | Technology         |
+|--------------------|--------------------|
+| Smart Contract     | Solidity (^0.8.0)  |
+| Local Blockchain   | Hardhat            |
+| Frontend           | HTML, CSS, JavaScript |
+| Web3 Integration   | Ethers.js          |
+| Wallet             | MetaMask           |
 
-Clone the repository:
-git clone https://github.com/yourusername/blockchain-supply-chain.git
-cd blockchain-supply-chain
+## 🏁 Getting Started
 
-Install dependencies:
-npm install
+### Prerequisites
+- [Node.js](https://nodejs.org/) and npm
+- [MetaMask](https://metamask.io/) browser extension
 
-Start the local Hardhat network:
-npx hardhat node
-
-Deploy the smart contract:
-npx hardhat run scripts/test.js --network localhost
-
-Open the frontend application and connect to the deployed contract address.
-
-Usage
-
-Connect to MetaMask and select the appropriate account for the role you want to simulate.
-Enter the deployed contract address in the application.
-Create products as the manufacturer.
-Transfer ownership and update status as products move through the supply chain.
-View the complete history of any product to verify its journey.
-
-Project Structure
-
-contracts/SupplyChain.sol: Smart contract for product tracking
-scripts/test.js: Deployment script for Hardhat
-frontend/: Web interface for interacting with the blockchain
-
-Demo Workflow
-
-Manufacturer creates a new product
-Manufacturer transfers ownership to Distributor
-Distributor updates location and status
-Inspector verifies product information
-Distributor transfers to Retailer
-Consumer verifies complete product history
-
-Academic Context
-This project was developed for CECS 574 - Distributed Computing to demonstrate the application of blockchain technology in supply chain management.
-License
-MIT
-Acknowledgments
-
-OpenZeppelin for the Ownable contract implementation
-Hardhat development environment
-Ethers.js for blockchain interaction
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/blockchain-supply-chain.git
+   cd blockchain-supply-chain
