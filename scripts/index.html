@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blockchain Supply Chain Demo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f7fa;
+        color: #333;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .section {
+        margin-bottom: 30px;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+      }
+      .section h2 {
+        margin-top: 0;
+        color: #3498db;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+      .step {
+        margin-bottom: 15px;
+        padding: 15px;
+        border-left: 4px solid #3498db;
+        background-color: white;
+      }
+      button {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s;
+      }
+      button:hover {
+        background-color: #2980b9;
+      }
+      button:disabled {
+        background-color: #95a5a6;
+        cursor: not-allowed;
+      }
+      input,
+      select {
+        padding: 8px;
+        margin: 5px 0;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .status {
+        margin-top: 10px;
+        padding: 15px;
+        background-color: #f1f9f7;
+        border-left: 4px solid #2ecc71;
+      }
+      .product-details {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+      }
+      .product-details h3 {
+        margin-top: 0;
+        color: #2c3e50;
+      }
+      .product-details p {
+        margin: 5px 0;
+      }
+      .error {
+        color: #e74c3c;
+        background-color: #fadbd8;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+      }
+      .flex-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+      }
+      .flex-col {
+        flex: 1;
+      }
+      .timeline {
+        position: relative;
+        padding-left: 30px;
+        margin-top: 20px;
+      }
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background-color: #3498db;
+      }
+      .timeline-item {
+        position: relative;
+        padding: 10px 0;
+      }
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -34px;
+        top: 15px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #3498db;
+        border: 2px solid white;
+      }
+      .participant {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 3px;
+        font-size: 12px;
+        font-weight: bold;
+        margin-right: 5px;
+      }
+      .manufacturer {
+        background-color: #e74c3c;
+        color: white;
+      }
+      .distributor {
+        background-color: #3498db;
+        color: white;
+      }
+      .retailer {
+        background-color: #2ecc71;
+        color: white;
+      }
+      .inspector {
+        background-color: #f39c12;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Blockchain Supply Chain Demo</h1>
+
+      <div class="section">
+        <h2>1. Connect to Blockchain</h2>
+        <div class="step">
+          <p>Connect to your local Hardhat blockchain node:</p>
+          <div class="flex-row">
+            <div class="flex-col">
+              <label for="contract-address">Contract Address:</label>
+              <input type="text" id="contract-address" placeholder="0x..." />
+            </div>
+            <div class="flex-col" style="align-self: flex-end">
+              <button id="connect-btn">Connect</button>
+            </div>
+          </div>
+          <div id="connection-status"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>2. Create Product</h2>
+        <div class="step">
+          <p>As the manufacturer, create a new product:</p>
+          <label for="product-name">Product Name:</label>
+          <input
+            type="text"
+            id="product-name"
+            placeholder="Laptop Model X"
+            value="Laptop Model X"
+          />
+
+          <label for="product-location">Initial Location:</label>
+          <input
+            type="text"
+            id="product-location"
+            placeholder="Factory Shanghai"
+            value="Factory Shanghai"
+          />
+
+          <button id="create-product-btn" disabled>Create Product</button>
+          <div id="create-product-status"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>3. View Product</h2>
+        <div class="step">
+          <p>View product details from any participant's perspective:</p>
+          <div class="flex-row">
+            <div class="flex-col">
+              <label for="product-id">Product ID:</label>
+              <input type="number" id="product-id" value="1" />
+            </div>
+            <div class="flex-col">
+              <label for="viewer">Viewing As:</label>
+              <select id="viewer">
+                <option value="manufacturer">Manufacturer</option>
+                <option value="distributor">Distributor</option>
+                <option value="retailer">Retailer</option>
+                <option value="inspector">Inspector</option>
+              </select>
+            </div>
+            <div class="flex-col" style="align-self: flex-end">
+              <button id="view-product-btn" disabled>View Product</button>
+            </div>
+          </div>
+          <div id="view-product-status"></div>
+          <div
+            id="product-details"
+            class="product-details"
+            style="display: none"
+          ></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>4. Update Product</h2>
+        <div class="step">
+          <p>Update product information as the current owner:</p>
+          <div class="flex-row">
+            <div class="flex-col">
+              <label for="update-product-id">Product ID:</label>
+              <input type="number" id="update-product-id" value="1" />
+            </div>
+            <div class="flex-col">
+              <label for="update-as">Update As:</label>
+              <select id="update-as">
+                <option value="manufacturer">Manufacturer</option>
+                <option value="distributor">Distributor</option>
+                <option value="retailer">Retailer</option>
+              </select>
+            </div>
+          </div>
+
+          <label for="new-location">New Location:</label>
+          <input
+            type="text"
+            id="new-location"
+            placeholder="Distribution Center"
+          />
+
+          <label for="new-status">New Status:</label>
+          <input type="text" id="new-status" placeholder="In Transit" />
+
+          <label for="new-owner">Transfer To:</label>
+          <select id="new-owner">
+            <option value="manufacturer">Manufacturer</option>
+            <option value="distributor">Distributor</option>
+            <option value="retailer">Retailer</option>
+          </select>
+
+          <button id="update-product-btn" disabled>Update Product</button>
+          <div id="update-product-status"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>5. Product Journey</h2>
+        <div class="step">
+          <p>Complete history of product movement through the supply chain:</p>
+          <div class="flex-row">
+            <div class="flex-col">
+              <label for="history-product-id">Product ID:</label>
+              <input type="number" id="history-product-id" value="1" />
+            </div>
+            <div class="flex-col" style="align-self: flex-end">
+              <button id="view-history-btn" disabled>View Journey</button>
+            </div>
+          </div>
+          <div id="view-history-status"></div>
+          <div id="product-history" class="timeline"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let provider;
+      let signer;
+      let contract;
+      let accounts = {};
+
+      // Contract ABI - replace with your actual ABI
+      const contractABI = [
+        "function createProduct(string memory _name, string memory _initialLocation) public",
+        "function getProduct(uint _id) public view returns (uint id, string memory name, string memory currentLocation, address currentOwner, string memory status, string[] memory history)",
+        "function updateProduct(uint _id, string memory _newLocation, string memory _newStatus, address _newOwner) public",
+        "function productCount() public view returns (uint)",
+      ];
+
+      // Connect to blockchain
+      document
+        .getElementById("connect-btn")
+        .addEventListener("click", async () => {
+          try {
+            const connectionStatus =
+              document.getElementById("connection-status");
+            connectionStatus.innerHTML = "<p>Connecting to blockchain...</p>";
+
+            // Connect to provider
+            provider = new ethers.providers.Web3Provider(window.ethereum);
+            await provider.send("eth_requestAccounts", []);
+            signer = provider.getSigner();
+
+            // Get contract
+            const contractAddress =
+              document.getElementById("contract-address").value;
+            contract = new ethers.Contract(
+              contractAddress,
+              contractABI,
+              signer
+            );
+
+            // Set up accounts (simplified for demo - you would get these from Hardhat)
+            const allAccounts = await provider.listAccounts();
+            accounts = {
+              manufacturer: allAccounts[0],
+              distributor: allAccounts[1],
+              retailer: allAccounts[2],
+              inspector: allAccounts[3],
+            };
+
+            connectionStatus.innerHTML =
+              '<div class="status">✓ Connected to blockchain successfully!</div>';
+
+            // Enable buttons
+            document.getElementById("create-product-btn").disabled = false;
+            document.getElementById("view-product-btn").disabled = false;
+            document.getElementById("update-product-btn").disabled = false;
+            document.getElementById("view-history-btn").disabled = false;
+          } catch (error) {
+            document.getElementById(
+              "connection-status"
+            ).innerHTML = `<div class="error">Error connecting: ${error.message}</div>`;
+          }
+        });
+
+      // Create Product
+      document
+        .getElementById("create-product-btn")
+        .addEventListener("click", async () => {
+          try {
+            const createStatus = document.getElementById(
+              "create-product-status"
+            );
+            createStatus.innerHTML = "<p>Creating product...</p>";
+
+            const name = document.getElementById("product-name").value;
+            const location = document.getElementById("product-location").value;
+
+            // Always use manufacturer for product creation
+            const manufacturerSigner = await getSignerForRole("manufacturer");
+            const manufacturerContract = contract.connect(manufacturerSigner);
+
+            const tx = await manufacturerContract.createProduct(name, location);
+            await tx.wait();
+
+            createStatus.innerHTML =
+              '<div class="status">✓ Product created successfully!</div>';
+          } catch (error) {
+            document.getElementById(
+              "create-product-status"
+            ).innerHTML = `<div class="error">Error creating product: Not authorized</div>`;
+          }
+        });
+
+      // View Product
+      document
+        .getElementById("view-product-btn")
+        .addEventListener("click", async () => {
+          try {
+            const viewStatus = document.getElementById("view-product-status");
+            const detailsDiv = document.getElementById("product-details");
+            viewStatus.innerHTML = "<p>Fetching product details...</p>";
+            detailsDiv.style.display = "none";
+
+            const productId = document.getElementById("product-id").value;
+            const role = document.getElementById("viewer").value;
+
+            // Get product details using the selected role's signer
+            const roleSigner = await getSignerForRole(role);
+            const roleContract = contract.connect(roleSigner);
+
+            const product = await roleContract.getProduct(productId);
+
+            // Display product details
+            detailsDiv.innerHTML = `
+                    <h3>Product Details <span class="participant ${role}">${role}</span></h3>
+                    <p><strong>ID:</strong> ${product[0]}</p>
+                    <p><strong>Name:</strong> ${product[1]}</p>
+                    <p><strong>Location:</strong> ${product[2]}</p>
+                    <p><strong>Owner:</strong> ${getParticipantFromAddress(
+                      product[3]
+                    )}</p>
+                    <p><strong>Status:</strong> ${product[4]}</p>
+                    <p><strong>History:</strong></p>
+                    <ul>
+                        ${product[5].map((item) => `<li>${item}</li>`).join("")}
+                    </ul>
+                `;
+            detailsDiv.style.display = "block";
+            viewStatus.innerHTML =
+              '<div class="status">✓ Product details retrieved!</div>';
+          } catch (error) {
+            document.getElementById(
+              "view-product-status"
+            ).innerHTML = `<div class="error">Error viewing product: ${error.message}</div>`;
+          }
+        });
+
+      // Update Product
+      document
+        .getElementById("update-product-btn")
+        .addEventListener("click", async () => {
+          try {
+            const updateStatus = document.getElementById(
+              "update-product-status"
+            );
+            updateStatus.innerHTML = "<p>Updating product...</p>";
+
+            const productId =
+              document.getElementById("update-product-id").value;
+            const newLocation = document.getElementById("new-location").value;
+            const newStatus = document.getElementById("new-status").value;
+            const newOwnerRole = document.getElementById("new-owner").value;
+            const updaterRole = document.getElementById("update-as").value;
+
+            // Get the new owner's address
+            const newOwnerAddress = accounts[newOwnerRole];
+
+            // Get signer for the current role
+            const updaterSigner = await getSignerForRole(updaterRole);
+            const updaterContract = contract.connect(updaterSigner);
+
+            const tx = await updaterContract.updateProduct(
+              productId,
+              newLocation,
+              newStatus,
+              newOwnerAddress
+            );
+            await tx.wait();
+
+            updateStatus.innerHTML =
+              '<div class="status">✓ Product updated successfully!</div>';
+          } catch (error) {
+            document.getElementById(
+              "update-product-status"
+            ).innerHTML = `<div class="error">Error updating product: Not Authorized</div>`;
+          }
+        });
+
+      // View History
+      document
+        .getElementById("view-history-btn")
+        .addEventListener("click", async () => {
+          try {
+            const historyStatus = document.getElementById(
+              "view-history-status"
+            );
+            const historyDiv = document.getElementById("product-history");
+            historyStatus.innerHTML = "<p>Fetching product history...</p>";
+            historyDiv.innerHTML = "";
+
+            const productId =
+              document.getElementById("history-product-id").value;
+
+            // Get product to see its history
+            const product = await contract.getProduct(productId);
+
+            // Parse history items
+            let historyHTML = "";
+            for (let i = 0; i < product[5].length; i++) {
+              const historyItem = product[5][i];
+              let participantClass = "manufacturer";
+
+              if (historyItem.includes("Moved to")) {
+                if (i % 3 === 1) participantClass = "distributor";
+                if (i % 3 === 2) participantClass = "retailer";
+              }
+
+              historyHTML += `
+                        <div class="timeline-item">
+                            <span class="participant ${participantClass}">${getParticipantFromIndex(
+                i
+              )}</span>
+                            <p>${historyItem}</p>
+                        </div>
+                    `;
+            }
+
+            historyDiv.innerHTML = historyHTML;
+            historyStatus.innerHTML =
+              '<div class="status">✓ Product history retrieved!</div>';
+          } catch (error) {
+            document.getElementById(
+              "view-history-status"
+            ).innerHTML = `<div class="error">Error fetching history: ${error.message}</div>`;
+          }
+        });
+
+      // Helper function to get signer for a specific role
+      async function getSignerForRole(role) {
+        // In a real application, you would need to handle account switching
+        // For demo purposes, we'll simulate using the connected account
+        return signer;
+      }
+
+      // Helper function to get participant name from address
+      function getParticipantFromAddress(address) {
+        for (const [role, addr] of Object.entries(accounts)) {
+          if (addr.toLowerCase() === address.toLowerCase()) {
+            return role;
+          }
+        }
+        return "Unknown";
+      }
+
+      // Helper function to guess participant name from history index
+      function getParticipantFromIndex(index) {
+        if (index === 0) return "Manufacturer";
+        if (index % 3 === 1) return "Distributor";
+        if (index % 3 === 2) return "Retailer";
+        return "Participant";
+      }
+    </script>
+  </body>
+</html>

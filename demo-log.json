@@ -1,0 +1,28 @@
+[
+  {
+    "action": "Product Created",
+    "productId": 1,
+    "actor": "Manufacturer",
+    "timestamp": "2025-04-16T17:00:15.977Z"
+  },
+  {
+    "action": "Product Created",
+    "productId": 2,
+    "actor": "Manufacturer",
+    "timestamp": "2025-04-16T17:00:16.003Z"
+  },
+  {
+    "action": "Product Transferred",
+    "productId": 1,
+    "actor": "Manufacturer",
+    "recipient": "Distributor",
+    "timestamp": "2025-04-16T17:00:16.091Z"
+  },
+  {
+    "action": "Product Transferred",
+    "productId": 1,
+    "actor": "Distributor",
+    "recipient": "Retailer",
+    "timestamp": "2025-04-16T17:00:16.125Z"
+  }
+]
