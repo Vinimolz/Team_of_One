@@ -48,6 +48,14 @@ This project implements a blockchain-based supply chain tracking system. It enab
    ```bash
    git clone https://github.com/yourusername/blockchain-supply-chain.git
    cd blockchain-supply-chain
+   npm install
+   npx hardhat node
+   npx hardhat run scripts/test.js --network localhost
+2. Open application and MetaMask wallet browser extension.
+4. Connect to hardhat local network
+5. Create four users using the keys provided by hardhat
+6. have fun
+7. Connect front end to deployed smart contract with given address
 
 ## 📖 Usage
 Connect MetaMask and select the appropriate account for your role (e.g., manufacturer, distributor).
