@@ -43,28 +43,28 @@ This project implements a blockchain-based supply chain tracking system. It enab
 - [Node.js](https://nodejs.org/) and npm
 - [MetaMask](https://metamask.io/) browser extension
 
-📖 Usage
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/blockchain-supply-chain.git
+   cd blockchain-supply-chain
+
+## 📖 Usage
 Connect MetaMask and select the appropriate account for your role (e.g., manufacturer, distributor).
 Enter the deployed contract address in the frontend application.
 As a manufacturer, create products.
 Transfer ownership and update status as products move through the supply chain.
 View the complete history of any product to verify its journey.
-📂 Project Structure
+## 📂 Project Structure
 contracts/SupplyChain.sol: Smart contract for product tracking.
 scripts/test.js: Deployment script for Hardhat.
 frontend/: Web interface for blockchain interaction.
-🎥 Demo Workflow
+## 🎥 Demo Workflow
 Manufacturer creates a new product.
 Manufacturer transfers ownership to Distributor.
 Distributor updates location and status.
 Inspector verifies product information.
 Distributor transfers to Retailer.
 Consumer verifies the complete product history.
-🎓 Academic Context
+## 🎓 Academic Context
 This project was developed for CECS 574 - Distributed Computing to demonstrate blockchain technology's application in supply chain management.
-
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/blockchain-supply-chain.git
-   cd blockchain-supply-chain
