@@ -50,7 +50,7 @@ This project implements a blockchain-based supply chain tracking system. It enab
    cd blockchain-supply-chain
    npm install
    npx hardhat node
-   npx hardhat run scripts/test.js --network localhost
+   npx hardhat run scripts/deploy.js --network localhost
 2. Open application and MetaMask wallet browser extension.
 4. Connect to hardhat local network
 5. Create four users using the keys provided by hardhat
