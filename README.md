@@ -14,8 +14,6 @@ A decentralized application (DApp) demonstrating how blockchain technology enhan
 - [Project Structure](#project-structure)
 - [Demo Workflow](#demo-workflow)
 - [Academic Context](#academic-context)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
 
 ## 🌟 Overview
 This project implements a blockchain-based supply chain tracking system. It enables participants (manufacturers, distributors, retailers, and inspectors) to create, transfer, and track products across the supply chain. The system ensures an immutable record of each product's journey, fostering transparency and trust among stakeholders.
